@@ -1,2 +1,2 @@
-# Planar Wave Propagaion
+# Planar Wave Propagation
 ## OPT 212
