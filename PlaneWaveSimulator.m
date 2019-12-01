@@ -446,11 +446,21 @@ handles.critang.String = num2str(theta_crit); %Sets the critical angle
 
 %% Plotting
 % Incident
+n1 = str2num(get(handles.n1,'String'));
+n2 = str2num(get(handles.n2,'String'));
+n3 = str2num(get(handles.n3,'String'));
+n4 = str2num(get(handles.n4,'String'));
+t1 = str2num(get(handles.n1,'String'));
+t2 = str2num(get(handles.t2,'String'));
+t3 = str2num(get(handles.t3,'String'));
+t4 = str2num(get(handles.t4,'String'));
+theta = (get(handles.slider1,'Value'));
+lam = str2num(get(handles.lam,'String'));
 stepsize = 0.00025;
 x1 = -str2num(get(handles.t1,'String')):stepsize:0;
 x2 = 0:stepsize:str2num(get(handles.t2,'String'));
-x3 = str2num(get(handles.t2,'String')):stepsize:str2num(get(handles.t3,'String'));
-x4 = str2num(get(handles.t3,'String')):stepsize:str2num(get(handles.t4,'String'));
+x3 = str2num(get(handles.t2,'String')):stepsize:str2num(get(handles.t3,'String'))+str2num(get(handles.t2,'String'));
+x4 = str2num(get(handles.t3,'String')):stepsize:str2num(get(handles.t4,'String'))+stepsize:str2num(get(handles.t3,'String'))+str2num(get(handles.t2,'String'));
 
 y = 0:stepsize:1;
 
@@ -461,23 +471,57 @@ y = 0:stepsize:1;
 
 kx = cosd(get(handles.slider1,'Value'))./str2num(get(handles.lam,'String'));
 ky = -sind(get(handles.slider1,'Value'))./str2num(get(handles.lam,'String'));
+disp(num2str(ky))
 k = sqrt(kx^2+ky^2);
 
 qx = k*sqrt(str2num(get(handles.n2,'String'))./str2num(get(handles.n1,'String')).^2 ...
     -sind(get(handles.slider1,'Value')).^2);
 qy = ky;
+q = sqrt(qx.^2+qy.^2);
+
+px = q*sqrt(str2num(get(handles.n3,'String'))./str2num(get(handles.n2,'String')).^2 ...
+    -sind(get(handles.slider1,'Value')).^2);
+
+temp = asind((n1.*sind(theta))./n2);
+
+
+py = qy.*sind(temp);
+p = sqrt(px.^2+py.^2);
+
+jx = p*sqrt(str2num(get(handles.n4,'String'))./str2num(get(handles.n3,'String')).^2 ...
+    -sind(get(handles.slider1,'Value')).^2);
+jy = py;
+j = sqrt(jx.^2+jy.^2);
 
 
 
 
 E1 = exp(1i*(kx*X1 + ky*Y1));
 E2 = exp(1i*(qx*X2 + qy*Y2));
+E3 = exp(1i*(px*X3 + py*Y3));
+E4 = exp(1i*(jx*X4 + jy*Y4));
 
 
 hold on
-xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); 
+switch get(handles.layers,'Value')
+    case 1 %One Media
+imagesc(x1,y,real(E1)); %E incident     
+    case 2 %Two Media
 imagesc(x1,y,real(E1)); %E incident
 imagesc(x2,y,real(E2)); %E incident
+    case 3 %Three Media
+imagesc(x1,y,real(E1)); %E incident
+imagesc(x2,y,real(E2)); %E incident
+imagesc(x3,y,real(E3)); %E incident  
+    case 4 %Four Media
+imagesc(x1,y,real(E1)); %E incident
+imagesc(x2,y,real(E2)); %E incident
+imagesc(x3,y,real(E3)); %E incident
+imagesc(x4,y,real(E4)); %E incident
+end
+
+xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); 
+
 xmax = (str2num(get(handles.t2,'String'))+str2num(get(handles.t3,'String'))+str2num(get(handles.t4,'String')));
 xlim([-1 xmax]);
 ylim([0 1]);
