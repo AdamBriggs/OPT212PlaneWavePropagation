@@ -22,7 +22,7 @@ function varargout = PlaneWaveSimulator(varargin)
 
 % Edit the above text to modify the response to help PlaneWaveSimulator
 
-% Last Modified by GUIDE v2.5 01-Dec-2019 15:49:16
+% Last Modified by GUIDE v2.5 01-Dec-2019 15:30:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -467,9 +467,6 @@ qx = k*sqrt(str2num(get(handles.n2,'String'))./str2num(get(handles.n1,'String'))
     -sind(get(handles.slider1,'Value')).^2);
 qy = ky;
 
-
-
-
 E1 = exp(1i*(kx*X1 + ky*Y1));
 E2 = exp(1i*(qx*X2 + qy*Y2));
 
@@ -478,8 +475,8 @@ hold on
 xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); 
 imagesc(x1,y,real(E1)); %E incident
 imagesc(x2,y,real(E2)); %E incident
-xmax = (str2num(get(handles.t2,'String'))+str2num(get(handles.t3,'String'))+str2num(get(handles.t4,'String')));
-xlim([-1 xmax]);
+xmax = (t2+t3+t4);
 ylim([0 1]);
 hold off
 axis('xy');
+colormap('gray');
