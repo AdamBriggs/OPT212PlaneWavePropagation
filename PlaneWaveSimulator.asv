@@ -439,7 +439,7 @@ n1 = str2double(get(handles.n1,'String'));
 n2 = str2double(get(handles.n2,'String'));
 n3 = str2double(get(handles.n3,'String'));
 n4 = str2double(get(handles.n4,'String'));
-t1 = str2double(get(handles.t1,'String'));
+t1 = str2double(get(handles.n1,'String'));
 t2 = str2double(get(handles.t2,'String'));
 t3 = str2double(get(handles.t3,'String'));
 t4 = str2double(get(handles.t4,'String'));
@@ -501,21 +501,34 @@ hold on;
 imagesc(x1,y,real(E1)); % E1
 
 if layers>=2
-    imagesc(x2,y,real(E2)); % E2
+    imagesc(x2,y,real(E2)); % E incident
     xmax=xmax+t2;
 end
 if layers>=3
-    imagesc(x3,y,real(E3)); % E3
+    imagesc(x3,y,real(E3)); % E incident
     xmax=xmax+t3;
 end
 if layers>=4
-    imagesc(x4,y,real(E4)); % E4
+    imagesc(x4,y,real(E4)); % E incident
     xmax=xmax+t4;
 end
-hold off;
 
-xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1);
+case 3 % Three Media
+        imagesc(x1,y,real(E1)); % E incident
+        imagesc(x2,y,real(E2)); % E incident
+        imagesc(x3,y,real(E3)); % E incident  
+    case 4 % Four Media
+        imagesc(x1,y,real(E1)); % E incident
+        imagesc(x2,y,real(E2)); % E incident
+        imagesc(x3,y,real(E3)); % E incident
+        imagesc(x4,y,real(E4)); % E incident
+end
+
+xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); 
+
+xmax = t2+t3+t4;
 xlim([-t1 xmax]);
 xlabel('Position Relative to First Interface [\mum]')
 ylim([0 1]);
+hold off
 axis('xy');
