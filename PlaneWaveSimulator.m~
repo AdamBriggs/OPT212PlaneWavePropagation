@@ -490,8 +490,6 @@ px = q*sqrt(str2num(get(handles.n3,'String'))./str2num(get(handles.n2,'String'))
 py = -((n1.*sind(theta))./n2)./str2num(get(handles.lam,'String'));
 p = sqrt(px.^2+py.^2);
 
-
-%% Fourth Wave
 jx = p*sqrt(str2num(get(handles.n4,'String'))./str2num(get(handles.n3,'String')).^2 ...
     -sind(get(handles.slider1,'Value')).^2);
 jy = py;
