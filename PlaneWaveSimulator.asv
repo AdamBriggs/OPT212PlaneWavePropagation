@@ -415,120 +415,95 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on any update value in the GUI
+% --- Executes on any updated value in the GUI
 function update(handles)
 % This function refreshes the GUI, plotting the required wave interactions
 % at the specified interface, and updates all labels and values as necessary
 cla;
 
-
 %% Calculates criticalangle Angle for First and Second Media
 n2 = str2double(get(handles.n2,'String'));
 n1 = str2double(get(handles.n1,'String'));
 
-try
-    theta_crit = asind(n2/n1); % Calculates the critical angle for the first two materials
+theta_crit = asind(n2/n1); % Calculates the critical angle for the first two materials
+if isreal(theta_crit)
     handles.criticalAngle.String = ['Critical Angle: ' num2str(theta_crit)]; % Sets the critical angle 
-catch
+else
     handles.criticalAngle.String = 'Critical Angle: N/A'; % No critical angle
 end
 
 %% Plotting
 % Incident
 n1 = str2double(get(handles.n1,'String'));
-n2 = str2double(get(handles.n2,'String'));
-n3 = str2double(get(handles.n3,'String'));
-n4 = str2double(get(handles.n4,'String'));
-t1 = str2double(get(handles.n1,'String'));
-t2 = str2double(get(handles.t2,'String'));
-t3 = str2double(get(handles.t3,'String'));
-t4 = str2double(get(handles.t4,'String'));
+t1 = str2double(get(handles.t1,'String'));
 theta = get(handles.thetaSlider,'Value');
 lam = str2double(get(handles.lam,'String'));
 stepsize = 0.00025;
 x1 = -t1:stepsize:0;
-x2 = 0:stepsize:t2;
-x3 = t2:stepsize:t2+t3;
-x4 = t2+t3:stepsize:t2+t3+t4;
+
+
 
 y = 0:stepsize:1;
+y=y'
+% [X1,Y1] = meshgrid(x1,y);
+% [X2,Y2] = meshgrid(x2,y);
+% [X3,Y3] = meshgrid(x3,y);
+% [X4,Y4] = meshgrid(x4,y);
 
-[X1,Y1] = meshgrid(x1,y);
-[X2,Y2] = meshgrid(x2,y);
-[X3,Y3] = meshgrid(x3,y);
-[X4,Y4] = meshgrid(x4,y);
-
-%% First Wave
-kx = cosd(theta)./lam;
-ky = n1.*-sind(theta)./lam;
-k = sqrt(kx^2+ky^2);
-
-%% Second Wave
-qx = k*sqrt((n2./n1).^2 ...
-    -sind(theta).^2);
-qy = ky;
-q = sqrt(qx.^2+qy.^2);
-
-%% Third Wave
-px = q*sqrt((n3./n2).^2 ...
-    -((n1.*sind(theta))./n2).^2);
-
-% temp = asind((n1.*sind(theta))./n2);
-
-
-py = -((n1.*sind(theta))./n2)./lam;
-p = sqrt(px.^2+py.^2);
-
-
-%% Fourth Wave
-jx = p*sqrt((n4./n3).^2 ...
-    -sind(theta).^2);
-jy = py;
-j = sqrt(jx.^2+jy.^2);
-
-
-
+k=2.*pi./lam.*n1;
+kx=k.*cosd(theta);
+ky=-k.*sind(theta);
 
 E1 = exp(1i*(kx*X1 + ky*Y1));
-E2 = exp(1i*(qx*X2 + qy*Y2));
-E3 = exp(1i*(px*X3 + py*Y3));
-E4 = exp(1i*(jx*X4 + jy*Y4));
 
-layers=handles.layers.Value;
+% Always plot wave in first medium
+imagesc(x1,y,real(E1));
 xmax=0;
-
+% Plot wave in subsequent media as needed
 hold on;
-imagesc(x1,y,real(E1)); % E1
-
+layers=handles.layers.Value;
 if layers>=2
-    imagesc(x2,y,real(E2)); % E incident
+    n2 = str2double(get(handles.n2,'String'));
+    t2 = str2double(get(handles.t2,'String'));
+    x2 = 0:stepsize:t2;
+    theta2=asind((n1.*sind(theta))./n2);
+    q=2.*pi./lam.*n2;
+    qx=q.*cosd(theta2);
+    qy=-q.*sind(theta2);
+    E2 = exp(1i*(qx*X2 + qy*Y2));
+    imagesc(x2,y,real(E2));
     xmax=xmax+t2;
+    xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
 end
 if layers>=3
-    imagesc(x3,y,real(E3)); % E incident
+    n3 = str2double(get(handles.n3,'String'));
+    t3 = str2double(get(handles.t3,'String'));
+    x3 = t2:stepsize:t2+t3;
+    theta3=asind((n2.*sind(theta2))./n3);
+    p=2.*pi./lam.*n3;
+    px=p.*cosd(theta3);
+    py=-p.*sind(theta3);
+    E3 = exp(1i*((px-t2./n2)*X3 + (py+t2./n2)*Y3));
+    imagesc(x3,y,real(E3));
     xmax=xmax+t3;
+    xline(t2,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
 end
 if layers>=4
-    imagesc(x4,y,real(E4)); % E incident
+    n4 = str2double(get(handles.n4,'String'));
+    t4 = str2double(get(handles.t4,'String'));
+    x4 = t2+t3:stepsize:t2+t3+t4;
+    theta4=asind((n3.*sind(theta3))./n4);
+    j=2.*pi./lam.*n4;
+    jx=j.*cosd(theta4);
+    jy=-j.*sind(theta4);
+    E4 = exp(1i*((jx-t3./n3)*X4 + (jy+t3./n3)*Y4));
+    imagesc(x4,y,real(E4));
     xmax=xmax+t4;
+    xline(t2+t3,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
 end
-
-case 3 % Three Media
-        imagesc(x1,y,real(E1)); % E incident
-        imagesc(x2,y,real(E2)); % E incident
-        imagesc(x3,y,real(E3)); % E incident  
-    case 4 % Four Media
-        imagesc(x1,y,real(E1)); % E incident
-        imagesc(x2,y,real(E2)); % E incident
-        imagesc(x3,y,real(E3)); % E incident
-        imagesc(x4,y,real(E4)); % E incident
-end
-
-xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); 
-
-xmax = t2+t3+t4;
+hold off;
 xlim([-t1 xmax]);
 xlabel('Position Relative to First Interface [\mum]')
-ylim([0 1]);
-hold off
-axis('xy');
+yticks([])
+axis('xy')
+set(gca,'FontSize',16,'FontWeight','bold','LineWidth',2)
