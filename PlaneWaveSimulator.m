@@ -1,5 +1,5 @@
 %% Plane Wave Simulator
-% Adam Briggs, Benjamin Nussbaum, Alyssa Ho
+% Adam Briggs, Benjamin Nussbaum, and Alyssa Ho
 % This project serves to fufill the final project requiriments for OPT 212
 % This GUI plots a wave traveling through various media. It takes into
 % consideration TIR.
