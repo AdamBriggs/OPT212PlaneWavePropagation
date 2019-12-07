@@ -368,8 +368,8 @@ handles.text10.Visible = 'off'; %Sets visibility off
 handles.text11.Visible = 'off'; %Sets visibility off
 handles.text12.Visible = 'off'; %Sets visibility off
 
-handles.crit2.Visible = 'off';
-handles.crit3.Visible = 'off';
+handles.crit2.Visible = 'off'; %Sets visibility off
+handles.crit3.Visible = 'off'; %Sets visibility off
 
 layers=handles.layers.Value; %Gets value of number of media from drop down selection
 
@@ -384,14 +384,14 @@ if layers>=3 %Enables visibility of labels and editable text boxes for 2-3 media
     handles.t3.Visible = 'on'; %Sets visibility on
     handles.text9.Visible = 'on'; %Sets visibility on
     handles.text10.Visible = 'on'; %Sets visibility on
-    handles.crit2.Visible = 'on';
+    handles.crit2.Visible = 'on'; %Sets visibility on
 end
 if layers>=4 %Enables visibility of labels and editable text boxes for 2-4 media
     handles.n4.Visible = 'on'; %Sets visibility on
     handles.t4.Visible = 'on'; %Sets visibility on
     handles.text11.Visible = 'on'; %Sets visibility on
     handles.text12.Visible = 'on'; %Sets visibility on
-    handles.crit3.Visible = 'on';
+    handles.crit3.Visible = 'on'; %Sets visibility on
 end
 
 update(handles) %Calls update function to refresh all labels, text boxes, and plots
@@ -424,17 +424,15 @@ theta_crit1 = asind(n2/n1); % Calculates the critical angle between materials 1 
 theta_crit2 = asind(n3/n2); % Calculates the critical angle between materials 2 and 3
 theta_crit3 = asind(n4/n3); % Calculates the critical angle between materials 3 and 4
 
-tcs=[theta_crit1 theta_crit2 theta_crit3];
-hs=[handles.crit1 handles.crit2 handles.crit3];
+tcs=[theta_crit1 theta_crit2 theta_crit3]; %Matrix of critical angles
+hs=[handles.crit1 handles.crit2 handles.crit3]; %Array of handles for critical angles
 for ii=1:3
     if isreal(tcs(ii)) %Sets critical angle based on if it exists or not
         add = num2str(tcs(ii),'%.2f'); % Sets the critical angle 
-%         hs(ii).String = num2str(tcs(ii),'%.2f');
     else
         add = 'N/A'; % No critical angle
-%         hs(ii).String = 'none;'
     end
-    hs(ii).String = [num2str(ii) ' to ' num2str(ii+1) ': ' add];
+    hs(ii).String = [num2str(ii) ' to ' num2str(ii+1) ': ' add]; %Prints out critical angle
 end
 
 %% Plotting
@@ -457,7 +455,7 @@ detail = 500; %Determined to have a high quality plot
 x1 = linspace(-t1,0,detail); %Calculating vector for first material thickness
 xmax=0; % Keeps track of maximum x value as layer numbers/thicknesses change
 y = linspace(0,1,detail); %Calculating vector for hight
-y=y';
+y=y'; %Setting y for plotting view
 
 % Wave vectors
 k=2.*pi./lam.*n1; %Calculating wave vector for first material
@@ -472,15 +470,15 @@ imagesc(x1,y,real(E1)); %Plotting first wave
 hold on;
 layers=handles.layers.Value; %Gets value of number of media from drop down selection
 
-% initialize no TIR
+% Initialize no TIR
 handles.tir.String={'NO' 'TIR'};
 handles.tir.ForegroundColor='g';
 
 if layers>=2
     x2 = linspace(0,t2,detail); %Calculates vector for second length
-    qx = k*sqrt( (n2/n1)^2 -sind(theta1)^2 );
-    qy = ky;
-    q=hypot(qx,qy);
+    qx = k*sqrt( (n2/n1)^2 -sind(theta1)^2 ); %Defining wave vector
+    qy = ky; %Defining wave vector
+    q=hypot(qx,qy); %Defining wave vector
     E2 = exp(1i*(qx*x2 + qy*y)); %Wave Equation
     imagesc(x2,y,real(E2)); %Plotting Wave
     xmax=xmax+t2; %Setting new x limits from first to second media
@@ -488,14 +486,14 @@ if layers>=2
     
     if layers>=3
         x3 = linspace(t2,t2+t3,detail); %Calculates vector for second length
-        px = q*sqrt( (n3/n2)^2 -sind(theta2)^2 );
-        py = qy;
-        p=hypot(px,py);
+        px = q*sqrt( (n3/n2)^2 -sind(theta2)^2 ); %Defining wave vector
+        py = qy; %Defining wave vector
+        p=hypot(px,py); %Defining wave vector
         E3 = exp(1i*(qx*t2 + px*(x3-t2) + py*y)); %Wave Equation
-        if theta1 >= real(theta_crit1)
-            E3=E3.*0;
-            handles.tir.String={'YES' 'TIR'};
-            handles.tir.ForegroundColor='r';
+        if theta1 >= real(theta_crit1) %If the previous media is TIR, plot zeros
+            E3=E3.*0; %Set zeros
+            handles.tir.String={'YES' 'TIR'}; %Change TIR Warning
+            handles.tir.ForegroundColor='r'; %Change TIR Warning
         end
         imagesc(x3,y,real(E3)); %Plotting Wave
         xmax=xmax+t3; %Setting new x limits from first to third media
@@ -504,17 +502,17 @@ if layers>=2
         if layers>=4
             
             x4 = linspace(t2+t3,t2+t3+t4,detail); %Calculates vector for second length
-            jx = p*sqrt( (n4/n3)^2 -sind(theta3)^2 );
-            jy = py;
+            jx = p*sqrt( (n4/n3)^2 -sind(theta3)^2 ); %Defining wave vector
+            jy = py; %Defining wave vector
             E4 = exp(1i*(qx*t2 + px*t3 + jx*(x4-(t2+t3)) + jy*y)); %Wave Equation
-            if theta1 >= real(theta_crit1) || theta2 >= real(theta_crit2)
-                E4=E4.*0;
-                handles.tir.String={'YES' 'TIR'};
-                handles.tir.ForegroundColor='r';
+            if theta1 >= real(theta_crit1) || theta2 >= real(theta_crit2) %If the S2 or S3 is TIR, plot zeros
+                E4=E4.*0; %Set zeros
+                handles.tir.String={'YES' 'TIR'}; %Change TIR Warning
+                handles.tir.ForegroundColor='r'; %Change TIR Warning
             end
             if theta3 >= real(theta_crit3)
-                handles.tir.String={'YES' 'TIR'};
-                handles.tir.ForegroundColor='r';
+                handles.tir.String={'YES' 'TIR'}; %Change TIR Warning
+                handles.tir.ForegroundColor='r'; %Change TIR Warning
             end
             imagesc(x4,y,real(E4)); %Plotting Wave
             xmax=xmax+t4; %Setting new x limits from first to third media
@@ -528,5 +526,4 @@ xlim([-t1 xmax]); %Sets final x limits based off of number of media and relative
 xlabel('Position Relative to First Interface [\mum]') %Sets x-label
 yticks([]) % Clean up y axis
 axis('xy') %Sets axis for the imagesc function to show
-% colorbar
 set(gca,'FontSize',16,'FontWeight','bold','LineWidth',2) %Change font size for all type
