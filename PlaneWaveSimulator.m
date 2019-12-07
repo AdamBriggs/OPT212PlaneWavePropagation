@@ -29,7 +29,7 @@ function varargout = PlaneWaveSimulator(varargin)
 
 % Edit the above text to modify the response to help PlaneWaveSimulator
 
-% Last Modified by GUIDE v2.5 02-Dec-2019 11:26:52
+% Last Modified by GUIDE v2.5 07-Dec-2019 14:33:34
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -368,6 +368,9 @@ handles.text10.Visible = 'off'; %Sets visibility off
 handles.text11.Visible = 'off'; %Sets visibility off
 handles.text12.Visible = 'off'; %Sets visibility off
 
+handles.crit2.Visible = 'off';
+handles.crit3.Visible = 'off';
+
 layers=handles.layers.Value; %Gets value of number of media from drop down selection
 
 if layers>=2 %Enables visibility of labels and editable text boxes for second media
@@ -381,12 +384,14 @@ if layers>=3 %Enables visibility of labels and editable text boxes for 2-3 media
     handles.t3.Visible = 'on'; %Sets visibility on
     handles.text9.Visible = 'on'; %Sets visibility on
     handles.text10.Visible = 'on'; %Sets visibility on
+    handles.crit2.Visible = 'on';
 end
 if layers>=4 %Enables visibility of labels and editable text boxes for 2-4 media
     handles.n4.Visible = 'on'; %Sets visibility on
     handles.t4.Visible = 'on'; %Sets visibility on
     handles.text11.Visible = 'on'; %Sets visibility on
     handles.text12.Visible = 'on'; %Sets visibility on
+    handles.crit3.Visible = 'on';
 end
 
 update(handles) %Calls update function to refresh all labels, text boxes, and plots
@@ -415,13 +420,21 @@ n2 = str2double(get(handles.n2,'String')); %Gets the value of n2 from the GUI
 n3 = str2double(get(handles.n3,'String')); %Gets the value of n3 from the GUI
 n4 = str2double(get(handles.n4,'String')); %Gets the value of n4 from the GUI
 
-theta_crit = asind(n2/n1); % Calculates the critical angle for the first two materials
-theta_crit2 = asind(n3/n2); % Calculates the critical angle for the second two materials
+theta_crit1 = asind(n2/n1); % Calculates the critical angle between materials 1 and 2
+theta_crit2 = asind(n3/n2); % Calculates the critical angle between materials 2 and 3
+theta_crit3 = asind(n4/n3); % Calculates the critical angle between materials 3 and 4
 
-if isreal(theta_crit) %Sets critical angle based on if it exists or not
-    handles.criticalAngle.String = ['Critical Angle: ' num2str(theta_crit)]; % Sets the critical angle 
-else
-    handles.criticalAngle.String = 'Critical Angle: N/A'; % No critical angle
+tcs=[theta_crit1 theta_crit2 theta_crit3];
+hs=[handles.crit1 handles.crit2 handles.crit3];
+for ii=1:3
+    if isreal(tcs(ii)) %Sets critical angle based on if it exists or not
+        add = num2str(tcs(ii),'%.2f'); % Sets the critical angle 
+%         hs(ii).String = num2str(tcs(ii),'%.2f');
+    else
+        add = 'N/A'; % No critical angle
+%         hs(ii).String = 'none;'
+    end
+    hs(ii).String = [num2str(ii) ' to ' num2str(ii+1) ': ' add];
 end
 
 %% Plotting
@@ -431,14 +444,19 @@ t1 = str2double(get(handles.t1,'String')); %Pulling variables from GUI
 t2 = str2double(get(handles.t2,'String')); %Pulling variables from GUI
 t3 = str2double(get(handles.t3,'String')); %Pulling variables from GUI
 t4 = str2double(get(handles.t4,'String')); %Pulling variables from GUI
-theta1 = get(handles.thetaSlider,'Value'); %Pulling variables from GUI
+
 lam = str2double(get(handles.lam,'String')); %Pulling variables from GUI
 
+theta1 = get(handles.thetaSlider,'Value'); %Pulling variables from GUI
+theta2 = asind((n1.*sind(theta1))./n2); % Calculate angle in second media
+theta3 = asind((n2.*sind(theta2))./n3); % Calculate angle in third media
+
+
 % Plot parameters
-stepsize = 0.005; %Determined to have a high quality plot
-x1 = -t1:stepsize:0; %Calculating vector for first material thickness
+detail = 500; %Determined to have a high quality plot
+x1 = linspace(-t1,0,detail); %Calculating vector for first material thickness
 xmax=0; % Keeps track of maximum x value as layer numbers/thicknesses change
-y = 0:stepsize:1; %Calculating vector for hight
+y = linspace(0,1,detail); %Calculating vector for hight
 y=y';
 
 % Wave vectors
@@ -453,52 +471,62 @@ imagesc(x1,y,real(E1)); %Plotting first wave
 % Plot waves in subsequent media as needed
 hold on;
 layers=handles.layers.Value; %Gets value of number of media from drop down selection
+
+% initialize no TIR
+handles.tir.String={'NO' 'TIR'};
+handles.tir.ForegroundColor='g';
+
 if layers>=2
-    x2 = 0:stepsize:t2; %Calculates vector for second length
-    theta2=asind((n1.*sind(theta1))./n2); %Calculate angle in second media
-    q=2.*pi./lam.*n2; %Calculate wave vector
-    qx=q.*cosd(theta2); %X-component
-    qy=-q.*sind(theta2); %Y-component
+    x2 = linspace(0,t2,detail); %Calculates vector for second length
+    qx = k*sqrt( (n2/n1)^2 -sind(theta1)^2 );
+    qy = ky;
+    q=hypot(qx,qy);
     E2 = exp(1i*(qx*x2 + qy*y)); %Wave Equation
     imagesc(x2,y,real(E2)); %Plotting Wave
     xmax=xmax+t2; %Setting new x limits from first to second media
     xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
-end
-if layers>=3
-    x3 = t2:stepsize:t2+t3; %Calculates vector for second length
-    theta3=asind((n2.*sind(theta2))./n3); %Calculate angle in third media
-    p=2.*pi./lam.*n3; %Calculate wave vector
-    px=p.*cosd(theta3); %X-component
-    py=-p.*sind(theta3); %Y-component
-    E3 = exp(1i*((px-t2./n2)*x3 + (py+t2./n2)*y)); %Wave Equation
-    if theta1 >= theta_crit %Checking to see if TIR exists.
-        %Do nothing; TIR exists
-    else 
+    
+    if layers>=3
+        x3 = linspace(t2,t2+t3,detail); %Calculates vector for second length
+        px = q*sqrt( (n3/n2)^2 -sind(theta2)^2 );
+        py = qy;
+        p=hypot(px,py);
+        E3 = exp(1i*(qx*t2 + px*(x3-t2) + py*y)); %Wave Equation
+        if theta1 >= real(theta_crit1)
+            E3=E3.*0;
+            handles.tir.String={'YES' 'TIR'};
+            handles.tir.ForegroundColor='r';
+        end
         imagesc(x3,y,real(E3)); %Plotting Wave
         xmax=xmax+t3; %Setting new x limits from first to third media
         xline(t2,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
-    end
-    
-end
-if layers>=4
-    x4 = t2+t3:stepsize:t2+t3+t4; %Calculates vector for second length
-    theta4=asind((n3.*sind(theta3))./n4); %Calculate angle in third media
-    j=2.*pi./lam.*n4; %Calculate wave vector
-    jx=j.*cosd(theta4); %X-component
-    jy=-j.*sind(theta4); %Y-component
-    E4 = exp(1i*((jx-t3./n3)*x4 + (jy+t3./n3)*y)); %Wave Equation
-    if theta2 >= theta_crit2 %Checking to see if TIR exists.
-        %Do nothing; TIR exist
-    else
-        imagesc(x4,y,real(E4)); %Plotting Wave
-        xmax=xmax+t4; %Setting new x limits from first to third media
-        xline(t2+t3,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker    
-    end
 
+        if layers>=4
+            
+            x4 = linspace(t2+t3,t2+t3+t4,detail); %Calculates vector for second length
+            jx = p*sqrt( (n4/n3)^2 -sind(theta3)^2 );
+            jy = py;
+            E4 = exp(1i*(qx*t2 + px*t3 + jx*(x4-(t2+t3)) + jy*y)); %Wave Equation
+            if theta1 >= real(theta_crit1) || theta2 >= real(theta_crit2)
+                E4=E4.*0;
+                handles.tir.String={'YES' 'TIR'};
+                handles.tir.ForegroundColor='r';
+            end
+            if theta3 >= real(theta_crit3)
+                handles.tir.String={'YES' 'TIR'};
+                handles.tir.ForegroundColor='r';
+            end
+            imagesc(x4,y,real(E4)); %Plotting Wave
+            xmax=xmax+t4; %Setting new x limits from first to third media
+            xline(t2+t3,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker    
+            
+        end
+    end
 end
 hold off;
 xlim([-t1 xmax]); %Sets final x limits based off of number of media and relative thickness
 xlabel('Position Relative to First Interface [\mum]') %Sets x-label
 yticks([]) % Clean up y axis
 axis('xy') %Sets axis for the imagesc function to show
+% colorbar
 set(gca,'FontSize',16,'FontWeight','bold','LineWidth',2) %Change font size for all type
