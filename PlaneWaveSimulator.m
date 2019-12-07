@@ -1,3 +1,10 @@
+%% Plane Wave Simulator
+% Adam Briggs, Benjamin Nussbaum, Alyssa Ho
+% This project serves to fufill the final project requiriments for OPT 212
+% This GUI plots a wave traveling through various media. It takes into
+% consideration TIR.
+%The GUI is straightforward and automatically updates when changes are
+%made.
 function varargout = PlaneWaveSimulator(varargin)
 % PLANEWAVESIMULATOR MATLAB code for PlaneWaveSimulator.fig
 %      PLANEWAVESIMULATOR, by itself, creates a new PLANEWAVESIMULATOR or raises the existing
@@ -64,7 +71,7 @@ guidata(hObject, handles);
 
 % --- Outputs from this function are returned to the command line.
 axes(handles.axes1); %Sets axis for the program
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 
 function varargout = PlaneWaveSimulator_OutputFcn(hObject, eventdata, handles) 
@@ -88,7 +95,7 @@ function theta_Callback(hObject, eventdata, handles)
 
 ang = str2double(handles.theta.String); % Gets value of theta from the textbox
 
-% Enforce angle limits
+% Enforce angle limits. 
 if ang>90
     ang=90;
     handles.theta.String='90';
@@ -99,7 +106,7 @@ end
 
 handles.thetaSlider.Value = ang; % Move slider to value in box
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function theta_CreateFcn(hObject, eventdata, handles)
@@ -113,8 +120,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function lam_Callback(hObject, eventdata, handles)
 % hObject    handle to lam (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -123,7 +128,7 @@ function lam_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of lam as text
 %        str2double(get(hObject,'String')) returns contents of lam as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function lam_CreateFcn(hObject, eventdata, handles)
@@ -137,8 +142,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function n1_Callback(hObject, eventdata, handles)
 % hObject    handle to n1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -147,7 +150,7 @@ function n1_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of n1 as text
 %        str2double(get(hObject,'String')) returns contents of n1 as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function n1_CreateFcn(hObject, eventdata, handles)
@@ -161,8 +164,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function t1_Callback(hObject, eventdata, handles)
 % hObject    handle to t1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -171,7 +172,7 @@ function t1_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of t1 as text
 %        str2double(get(hObject,'String')) returns contents of t1 as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function t1_CreateFcn(hObject, eventdata, handles)
@@ -185,8 +186,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function n2_Callback(hObject, eventdata, handles)
 % hObject    handle to n2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -195,7 +194,7 @@ function n2_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of n2 as text
 %        str2double(get(hObject,'String')) returns contents of n2 as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function n2_CreateFcn(hObject, eventdata, handles)
@@ -209,8 +208,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function t2_Callback(hObject, eventdata, handles)
 % hObject    handle to t2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -219,7 +216,7 @@ function t2_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of t2 as text
 %        str2double(get(hObject,'String')) returns contents of t2 as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function t2_CreateFcn(hObject, eventdata, handles)
@@ -233,8 +230,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function n3_Callback(hObject, eventdata, handles)
 % hObject    handle to n3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -243,7 +238,7 @@ function n3_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of n3 as text
 %        str2double(get(hObject,'String')) returns contents of n3 as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function n3_CreateFcn(hObject, eventdata, handles)
@@ -257,8 +252,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function t3_Callback(hObject, eventdata, handles)
 % hObject    handle to t3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -267,7 +260,7 @@ function t3_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of t3 as text
 %        str2double(get(hObject,'String')) returns contents of t3 as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function t3_CreateFcn(hObject, eventdata, handles)
@@ -281,8 +274,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function n4_Callback(hObject, eventdata, handles)
 % hObject    handle to n4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -291,7 +282,7 @@ function n4_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of n4 as text
 %        str2double(get(hObject,'String')) returns contents of n4 as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function n4_CreateFcn(hObject, eventdata, handles)
@@ -305,8 +296,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function t4_Callback(hObject, eventdata, handles)
 % hObject    handle to t4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -315,7 +304,7 @@ function t4_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of t4 as text
 %        str2double(get(hObject,'String')) returns contents of t4 as a double
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function t4_CreateFcn(hObject, eventdata, handles)
@@ -329,7 +318,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
 % --- Executes on slider movement.
 function thetaSlider_Callback(hObject, eventdata, handles)
 % hObject    handle to thetaSlider (see GCBO)
@@ -342,7 +330,7 @@ function thetaSlider_Callback(hObject, eventdata, handles)
 ang = handles.thetaSlider.Value; % Gets value of theta
 handles.theta.String = ang; % Sets textbox to match
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function thetaSlider_CreateFcn(hObject, eventdata, handles)
@@ -355,8 +343,6 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 
-
-
 % --- Executes on selection change in layers.
 function layers_Callback(hObject, eventdata, handles)
 % hObject    handle to layers (see GCBO)
@@ -366,41 +352,44 @@ function layers_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns layers contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from layers
 
-handles.n2.Visible = 'off';
-handles.t2.Visible = 'off';
-handles.n3.Visible = 'off';
-handles.t3.Visible = 'off';
-handles.n4.Visible = 'off';
-handles.t4.Visible = 'off';
-handles.text7.Visible = 'off';
-handles.text8.Visible = 'off';
-handles.text9.Visible = 'off';
-handles.text10.Visible = 'off';
-handles.text11.Visible = 'off';
-handles.text12.Visible = 'off';
+% This section sets the visibilities of all of the labels and editable text
+% boxes based on the selected number of materials.
 
-layers=handles.layers.Value;
+handles.n2.Visible = 'off'; %Sets visibility off
+handles.t2.Visible = 'off'; %Sets visibility off
+handles.n3.Visible = 'off'; %Sets visibility off
+handles.t3.Visible = 'off'; %Sets visibility off
+handles.n4.Visible = 'off'; %Sets visibility off
+handles.t4.Visible = 'off'; %Sets visibility off
+handles.text7.Visible = 'off'; %Sets visibility off
+handles.text8.Visible = 'off'; %Sets visibility off
+handles.text9.Visible = 'off'; %Sets visibility off
+handles.text10.Visible = 'off'; %Sets visibility off
+handles.text11.Visible = 'off'; %Sets visibility off
+handles.text12.Visible = 'off'; %Sets visibility off
 
-if layers>=2
-    handles.n2.Visible = 'on';
-    handles.t2.Visible = 'on';
-    handles.text7.Visible = 'on';
-    handles.text8.Visible = 'on'; 
+layers=handles.layers.Value; %Gets value of number of media from drop down selection
+
+if layers>=2 %Enables visibility of labels and editable text boxes for second media
+    handles.n2.Visible = 'on'; %Sets visibility on
+    handles.t2.Visible = 'on'; %Sets visibility on
+    handles.text7.Visible = 'on'; %Sets visibility on
+    handles.text8.Visible = 'on';  %Sets visibility on
 end
-if layers>=3
-    handles.n3.Visible = 'on';
-    handles.t3.Visible = 'on';
-    handles.text9.Visible = 'on';
-    handles.text10.Visible = 'on';
+if layers>=3 %Enables visibility of labels and editable text boxes for 2-3 media
+    handles.n3.Visible = 'on'; %Sets visibility on
+    handles.t3.Visible = 'on'; %Sets visibility on
+    handles.text9.Visible = 'on'; %Sets visibility on
+    handles.text10.Visible = 'on'; %Sets visibility on
 end
-if layers>=4
-    handles.n4.Visible = 'on';
-    handles.t4.Visible = 'on';
-    handles.text11.Visible = 'on';
-    handles.text12.Visible = 'on';
+if layers>=4 %Enables visibility of labels and editable text boxes for 2-4 media
+    handles.n4.Visible = 'on'; %Sets visibility on
+    handles.t4.Visible = 'on'; %Sets visibility on
+    handles.text11.Visible = 'on'; %Sets visibility on
+    handles.text12.Visible = 'on'; %Sets visibility on
 end
 
-update(handles)
+update(handles) %Calls update function to refresh all labels, text boxes, and plots
 
 % --- Executes during object creation, after setting all properties.
 function layers_CreateFcn(hObject, eventdata, handles)
@@ -414,19 +403,22 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
 % --- Executes on any updated value in the GUI
 function update(handles)
 % This function refreshes the GUI, plotting the required wave interactions
 % at the specified interface, and updates all labels and values as necessary
-cla;
+cla; %Clears the current axes
 
 %% Calculates criticalangle Angle for First and Second Media
-n2 = str2double(get(handles.n2,'String'));
-n1 = str2double(get(handles.n1,'String'));
+n1 = str2double(get(handles.n1,'String')); %Gets the value of n1 from the GUI
+n2 = str2double(get(handles.n2,'String')); %Gets the value of n2 from the GUI
+n3 = str2double(get(handles.n3,'String')); %Gets the value of n3 from the GUI
+n4 = str2double(get(handles.n4,'String')); %Gets the value of n4 from the GUI
 
 theta_crit = asind(n2/n1); % Calculates the critical angle for the first two materials
-if isreal(theta_crit)
+theta_crit2 = asind(n3/n2); % Calculates the critical angle for the second two materials
+
+if isreal(theta_crit) %Sets critical angle based on if it exists or not
     handles.criticalAngle.String = ['Critical Angle: ' num2str(theta_crit)]; % Sets the critical angle 
 else
     handles.criticalAngle.String = 'Critical Angle: N/A'; % No critical angle
@@ -435,72 +427,78 @@ end
 %% Plotting
 
 % Always incident plot wave in first medium
-n1 = str2double(get(handles.n1,'String'));
-t1 = str2double(get(handles.t1,'String'));
-theta1 = get(handles.thetaSlider,'Value');
-lam = str2double(get(handles.lam,'String'));
+t1 = str2double(get(handles.t1,'String')); %Pulling variables from GUI
+t2 = str2double(get(handles.t2,'String')); %Pulling variables from GUI
+t3 = str2double(get(handles.t3,'String')); %Pulling variables from GUI
+t4 = str2double(get(handles.t4,'String')); %Pulling variables from GUI
+theta1 = get(handles.thetaSlider,'Value'); %Pulling variables from GUI
+lam = str2double(get(handles.lam,'String')); %Pulling variables from GUI
 
 % Plot parameters
-stepsize = 0.005;
-x1 = -t1:stepsize:0;
+stepsize = 0.005; %Determined to have a high quality plot
+x1 = -t1:stepsize:0; %Calculating vector for first material thickness
 xmax=0; % Keeps track of maximum x value as layer numbers/thicknesses change
-y = 0:stepsize:1;
+y = 0:stepsize:1; %Calculating vector for hight
 y=y';
 
 % Wave vectors
-k=2.*pi./lam.*n1;
-kx=k.*cosd(theta1);
-ky=-k.*sind(theta1);
+k=2.*pi./lam.*n1; %Calculating wave vector for first material
+kx=k.*cosd(theta1); %X-component
+ky=-k.*sind(theta1); %Y-component
 
 % Construct and plot wave
-E1 = exp(1i*(kx*x1 + ky*y));
-imagesc(x1,y,real(E1));
+E1 = exp(1i*(kx*x1 + ky*y)); %Equation for first wave
+imagesc(x1,y,real(E1)); %Plotting first wave
 
 % Plot waves in subsequent media as needed
 hold on;
-layers=handles.layers.Value;
+layers=handles.layers.Value; %Gets value of number of media from drop down selection
 if layers>=2
-    n2 = str2double(get(handles.n2,'String'));
-    t2 = str2double(get(handles.t2,'String'));
-    x2 = 0:stepsize:t2;
-    theta2=asind((n1.*sind(theta1))./n2);
-    q=2.*pi./lam.*n2;
-    qx=q.*cosd(theta2);
-    qy=-q.*sind(theta2);
-    E2 = exp(1i*(qx*x2 + qy*y));
-    imagesc(x2,y,real(E2));
-    xmax=xmax+t2;
+    x2 = 0:stepsize:t2; %Calculates vector for second length
+    theta2=asind((n1.*sind(theta1))./n2); %Calculate angle in second media
+    q=2.*pi./lam.*n2; %Calculate wave vector
+    qx=q.*cosd(theta2); %X-component
+    qy=-q.*sind(theta2); %Y-component
+    E2 = exp(1i*(qx*x2 + qy*y)); %Wave Equation
+    imagesc(x2,y,real(E2)); %Plotting Wave
+    xmax=xmax+t2; %Setting new x limits from first to second media
     xline(0,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
 end
 if layers>=3
-    n3 = str2double(get(handles.n3,'String'));
-    t3 = str2double(get(handles.t3,'String'));
-    x3 = t2:stepsize:t2+t3;
-    theta3=asind((n2.*sind(theta2))./n3);
-    p=2.*pi./lam.*n3;
-    px=p.*cosd(theta3);
-    py=-p.*sind(theta3);
-    E3 = exp(1i*((px-t2./n2)*x3 + (py+t2./n2)*y));
-    imagesc(x3,y,real(E3));
-    xmax=xmax+t3;
-    xline(t2,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
+    x3 = t2:stepsize:t2+t3; %Calculates vector for second length
+    theta3=asind((n2.*sind(theta2))./n3); %Calculate angle in third media
+    p=2.*pi./lam.*n3; %Calculate wave vector
+    px=p.*cosd(theta3); %X-component
+    py=-p.*sind(theta3); %Y-component
+    E3 = exp(1i*((px-t2./n2)*x3 + (py+t2./n2)*y)); %Wave Equation
+    if theta1 >= theta_crit %Checking to see if TIR exists.
+        %Do nothing; TIR exists
+    else 
+        imagesc(x3,y,real(E3)); %Plotting Wave
+        xmax=xmax+t3; %Setting new x limits from first to third media
+        xline(t2,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
+    end
+    
 end
 if layers>=4
-    n4 = str2double(get(handles.n4,'String'));
-    t4 = str2double(get(handles.t4,'String'));
-    x4 = t2+t3:stepsize:t2+t3+t4;
-    theta4=asind((n3.*sind(theta3))./n4);
-    j=2.*pi./lam.*n4;
-    jx=j.*cosd(theta4);
-    jy=-j.*sind(theta4);
-    E4 = exp(1i*((jx-t3./n3)*x4 + (jy+t3./n3)*y));
-    imagesc(x4,y,real(E4));
-    xmax=xmax+t4;
-    xline(t2+t3,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker
+    x4 = t2+t3:stepsize:t2+t3+t4; %Calculates vector for second length
+    theta4=asind((n3.*sind(theta3))./n4); %Calculate angle in third media
+    j=2.*pi./lam.*n4; %Calculate wave vector
+    jx=j.*cosd(theta4); %X-component
+    jy=-j.*sind(theta4); %Y-component
+    E4 = exp(1i*((jx-t3./n3)*x4 + (jy+t3./n3)*y)); %Wave Equation
+    if theta2 >= theta_crit2 %Checking to see if TIR exists.
+        %Do nothing; TIR exist
+    else
+        imagesc(x4,y,real(E4)); %Plotting Wave
+        xmax=xmax+t4; %Setting new x limits from first to third media
+        xline(t2+t3,'Color',[.61 .51 .74],'LineWidth',2,'Alpha',1); % Interface marker    
+    end
+
 end
 hold off;
-xlim([-t1 xmax]);
-xlabel('Position Relative to First Interface [\mum]')
+xlim([-t1 xmax]); %Sets final x limits based off of number of media and relative thickness
+xlabel('Position Relative to First Interface [\mum]') %Sets x-label
 yticks([]) % Clean up y axis
-axis('xy')
-set(gca,'FontSize',16,'FontWeight','bold','LineWidth',2)
+axis('xy') %Sets axis for the imagesc function to show
+set(gca,'FontSize',16,'FontWeight','bold','LineWidth',2) %Change font size for all type
